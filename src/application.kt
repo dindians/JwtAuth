@@ -20,8 +20,8 @@ import org.kodein.di.generic.instance
 fun main(args: Array<String>): Unit = io.ktor.server.netty.DevelopmentEngine.main(args)
 
 val kodein = Kodein {
-    bind<IJwtAssist>() with provider { JwtAssistImpl() }
-    bind<IUserStore>() with provider { UserStoreImpl() }
+    bind<JwtAssist>() with provider { JwtAssistImpl() }
+    bind<UserStore>() with provider { UserStoreImpl() }
 }
 val ApplicationCall.user get() = authentication.principal<User>()!!
 
@@ -35,8 +35,8 @@ private val ApplicationEnvironment.jwtPayload get() = JwtPayload(
 )
 
 fun Application.module() {
-    val userStore = kodein.direct.instance<IUserStore>()
-    val jwtAssist = kodein.direct.instance<IJwtAssist>()
+    val userStore = kodein.direct.instance<UserStore>()
+    val jwtAssist = kodein.direct.instance<JwtAssist>()
 
     jwtAssist.setPayload(environment.jwtPayload)
 

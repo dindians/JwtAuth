@@ -3,7 +3,7 @@ package com.up
 import com.auth0.jwt.JWTVerifier
 import io.ktor.auth.jwt.JWTCredential
 
-interface IJwtAssist {
+interface JwtAssist {
     fun setPayload(jwtPayload: JwtPayload)
     fun buildVerifier(): JWTVerifier
     fun createToken(user:User):String
