@@ -12,9 +12,17 @@ import io.ktor.auth.jwt.jwt
 import io.ktor.jackson.*
 import io.ktor.features.*
 import io.ktor.request.receive
+import org.kodein.di.Kodein
+import org.kodein.di.direct
+import org.kodein.di.generic.*
+import org.kodein.di.generic.instance
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.DevelopmentEngine.main(args)
 
+val kodein = Kodein {
+    bind<IJwtAssist>() with provider { JwtAssist() }
+    bind<IUserStore>() with provider { UserStore() }
+}
 val ApplicationCall.user get() = authentication.principal<User>()!!
 
 private const val jwtPrefix = "ktor.jwt"
@@ -27,9 +35,10 @@ private val ApplicationEnvironment.jwtPayload get() = JwtPayload(
 )
 
 fun Application.module() {
-    val jwtAssist = JwtAssist()
+    val userStore = kodein.direct.instance<IUserStore>()
+    val jwtAssist = kodein.direct.instance<IJwtAssist>()
+
     jwtAssist.setPayload(environment.jwtPayload)
-    val userStore = UserStore()
 
 	install(ContentNegotiation) {
 		jackson {

@@ -46,6 +46,7 @@ dependencies {
 	testCompile "io.ktor:ktor-server-tests:$ktor_version"
 	testCompile "io.ktor:ktor-server-core:$ktor_version"
 	testCompile "io.ktor:ktor-jackson:$ktor_version"
+	implementation 'org.kodein.di:kodein-di-generic-jvm:5.2.0'
 }
 
 kotlin.experimental.coroutines = 'enable'
