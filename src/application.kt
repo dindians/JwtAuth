@@ -12,33 +12,18 @@ import io.ktor.auth.jwt.jwt
 import io.ktor.jackson.*
 import io.ktor.features.*
 import io.ktor.request.receive
-import org.kodein.di.Kodein
 import org.kodein.di.direct
-import org.kodein.di.generic.*
 import org.kodein.di.generic.instance
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.DevelopmentEngine.main(args)
 
-val kodein = Kodein {
-    bind<JwtAssist>() with provider { JwtAssistImpl() }
-    bind<UserStore>() with provider { UserStoreImpl() }
-}
 val ApplicationCall.user get() = authentication.principal<User>()!!
 
-private const val jwtPrefix = "ktor.jwt"
-private const val jwtPayloadPrefix = "$jwtPrefix.payload"
-private val ApplicationEnvironment.jwtRealm get() = config.property("$jwtPrefix.realm").getString()
-private val ApplicationEnvironment.jwtPayload get() = JwtPayload(
-        config.property("$jwtPayloadPrefix.issuer").getString(),
-        config.property("$jwtPayloadPrefix.subject").getString(),
-        config.property("$jwtPayloadPrefix.audience").getString()
-)
-
 fun Application.module() {
-    val userStore = kodein.direct.instance<UserStore>()
-    val jwtAssist = kodein.direct.instance<JwtAssist>()
-
-    jwtAssist.setPayload(environment.jwtPayload)
+    val kodeinAware = KodeinInjector().getKodeinAware(this.environment.config)
+    val userStore = kodeinAware.direct.instance<UserStore>()
+    val jwtConfigStore = kodeinAware.direct.instance<JwtConfigStore>()
+    val jwtAssist = kodeinAware.direct.instance<JwtAssist>()
 
 	install(ContentNegotiation) {
 		jackson {
@@ -48,7 +33,7 @@ fun Application.module() {
 
     authentication {
         jwt("jwt") {
-            realm = environment.jwtRealm
+            realm = jwtConfigStore.getRealm()
             verifier(jwtAssist.buildVerifier())
             validate{
                 jwtAssist.getUserId(it)?.let(userStore::getUser)
