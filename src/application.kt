@@ -27,6 +27,10 @@ private val ApplicationEnvironment.jwtPayload get() = JwtPayload(
 )
 
 fun Application.module() {
+    val jwtAssist = JwtAssist()
+    jwtAssist.setPayload(environment.jwtPayload)
+    val userStore = UserStore()
+
 	install(ContentNegotiation) {
 		jackson {
 			enable(SerializationFeature.INDENT_OUTPUT)
@@ -36,9 +40,9 @@ fun Application.module() {
     authentication {
         jwt("jwt") {
             realm = environment.jwtRealm
-            verifier(JwtAssist.buildVerifier(environment.jwtPayload))
+            verifier(jwtAssist.buildVerifier())
             validate{
-                JwtAssist.validateCredentials(it, environment.jwtPayload)
+                jwtAssist.getUserId(it)?.let(userStore::getUser)
             }
         }
     }
@@ -53,7 +57,7 @@ fun Application.module() {
 		}
 
         post("login") {
-            call.respondText(JwtAssist.authenticateUser(call.receive<UserPasswordCredential>())?.let{ JwtAssist.createToken(environment.jwtPayload, it) }?:"")
+            call.respondText(userStore.authenticateUser(call.receive<UserPasswordCredential>())?.let(jwtAssist::createToken)?:"")
         }
 
 		authenticate("jwt") {
