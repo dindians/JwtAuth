@@ -2,7 +2,7 @@ package com.up
 
 import io.ktor.auth.UserPasswordCredential
 
-internal class UserStore : IUserStore{
+internal class UserStoreImpl : IUserStore{
     private fun UserPasswordCredential.getUser():User? = if(name.equals("anton") && password.equals("me")) getUser(1) else null
 
     override fun getUser(id:Int):User? = when (id) {

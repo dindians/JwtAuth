@@ -20,8 +20,8 @@ import org.kodein.di.generic.instance
 fun main(args: Array<String>): Unit = io.ktor.server.netty.DevelopmentEngine.main(args)
 
 val kodein = Kodein {
-    bind<IJwtAssist>() with provider { JwtAssist() }
-    bind<IUserStore>() with provider { UserStore() }
+    bind<IJwtAssist>() with provider { JwtAssistImpl() }
+    bind<IUserStore>() with provider { UserStoreImpl() }
 }
 val ApplicationCall.user get() = authentication.principal<User>()!!
 

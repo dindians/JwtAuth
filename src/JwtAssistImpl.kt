@@ -6,7 +6,7 @@ import io.ktor.auth.jwt.JWTCredential
 import java.util.*
 
 
-internal class JwtAssist : IJwtAssist{
+internal class JwtAssistImpl : IJwtAssist{
     private val validityInMs = 36_000_00 * 10 // 10 hours
     private val secret = "zAP5MBA4B4Ijz0MZaS48"
     private val algorithm = Algorithm.HMAC512(secret)
