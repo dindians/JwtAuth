@@ -13,4 +13,6 @@ internal class JwtPropsProviderImpl(private val applicationConfig: ApplicationCo
             applicationConfig.property("$jwtPayloadPrefix.subject").getString(),
             applicationConfig.property("$jwtPayloadPrefix.audience").getString()
     )
+
+    override fun getValidityInMs() = applicationConfig.property("$jwtPrefix.validityInMs").getString().toInt()
 }
