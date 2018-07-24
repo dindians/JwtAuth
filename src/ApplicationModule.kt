@@ -34,7 +34,7 @@ fun Application.module() {
 
     authentication {
         jwt("jwt") {
-            realm = jwtPropsProvider.getRealm()
+            realm = jwtPropsProvider.realm
             verifier(jwtIssuer.buildVerifier())
             validate{
                 jwtIssuer.getUserId(it)?.let(userProvider::getUser)

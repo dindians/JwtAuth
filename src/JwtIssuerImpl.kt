@@ -5,7 +5,7 @@ import io.ktor.auth.jwt.JWTCredential
 import java.util.*
 
 internal class JwtIssuerImpl(jwtPropsProvider:JwtPropsProvider, jwtSigningAlgorithmProvider:JwtSigningAlgorithmProvider) : JwtIssuer{
-    private val validityInMs = jwtPropsProvider.getValidityInMs()
+    private val validityInMs = jwtPropsProvider.validityInSeconds
     private val algorithm = jwtSigningAlgorithmProvider.getAlgorithm()
     private val jwtPayload: JwtPayload = jwtPropsProvider.getPayload()
 

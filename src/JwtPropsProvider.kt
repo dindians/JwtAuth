@@ -1,7 +1,7 @@
 package com.up
 
 internal interface JwtPropsProvider {
-    fun getRealm(): String
+    val realm: String
+    val validityInSeconds: Int
     fun getPayload():JwtPayload
-    fun getValidityInMs(): Int
 }
