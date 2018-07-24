@@ -1,6 +1,6 @@
 package com.up
 
-internal interface JwtConfigStore {
+internal interface JwtPropsProvider {
     fun getRealm(): String
     fun getPayload():JwtPayload
 }

@@ -18,14 +18,13 @@ import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.route
 import io.ktor.routing.routing
-import org.kodein.di.direct
 import org.kodein.di.generic.instance
 
 fun Application.module() {
-    val kodeinAware = KodeinInjector().getKodeinAware(this.environment.config)
-    val userStore = kodeinAware.direct.instance<UserStore>()
-    val jwtConfigStore = kodeinAware.direct.instance<JwtConfigStore>()
-    val jwtAssist = kodeinAware.direct.instance<JwtAssist>()
+    val kodein = KodeinBindings().getKodein(this.environment.config)
+    val userProvider: UserProvider by kodein.instance()
+    val jwtPropsProvider: JwtPropsProvider by kodein.instance()
+    val jwtIssuer: JwtIssuer by kodein.instance()
 
     install(ContentNegotiation) {
         jackson {
@@ -35,10 +34,10 @@ fun Application.module() {
 
     authentication {
         jwt("jwt") {
-            realm = jwtConfigStore.getRealm()
-            verifier(jwtAssist.buildVerifier())
+            realm = jwtPropsProvider.getRealm()
+            verifier(jwtIssuer.buildVerifier())
             validate{
-                jwtAssist.getUserId(it)?.let(userStore::getUser)
+                jwtIssuer.getUserId(it)?.let(userProvider::getUser)
             }
         }
     }
@@ -53,7 +52,7 @@ fun Application.module() {
         }
 
         post("login") {
-            call.respondText(userStore.authenticateUser(call.receive<UserPasswordCredential>())?.let(jwtAssist::createToken)?:"")
+            call.respondText(userProvider.authenticateUser(call.receive<UserPasswordCredential>())?.let(jwtIssuer::createToken)?:"")
         }
 
         authenticate("jwt") {
