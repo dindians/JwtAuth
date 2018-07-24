@@ -10,7 +10,7 @@ import org.kodein.di.generic.provider
 class KodeinInjector() {
     fun getKodeinAware(applicationConfig: ApplicationConfig): KodeinAware = Kodein {
         bind<UserStore>() with provider { UserStoreImpl() }
-        bind<JwtConfigStore>() with provider { JwtPayloadStoreImpl(applicationConfig) }
+        bind<JwtConfigStore>() with provider { JwtConfigStoreImpl(applicationConfig) }
         bind<JwtAssist>() with provider { JwtAssistImpl(this.instance<JwtConfigStore>()) }
     }
 }

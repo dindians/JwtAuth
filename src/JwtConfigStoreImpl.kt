@@ -5,7 +5,7 @@ import io.ktor.config.ApplicationConfig
 private const val jwtPrefix = "ktor.jwt"
 private const val jwtPayloadPrefix = "$jwtPrefix.payload"
 
-internal class JwtPayloadStoreImpl(private val applicationConfig: ApplicationConfig): JwtConfigStore{
+internal class JwtConfigStoreImpl(private val applicationConfig: ApplicationConfig): JwtConfigStore{
     override fun getRealm() = applicationConfig.property("$jwtPrefix.realm").getString()
 
     override fun getPayload()= JwtPayload(
