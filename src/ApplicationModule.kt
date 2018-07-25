@@ -11,14 +11,13 @@ import io.ktor.auth.jwt.jwt
 import io.ktor.features.ContentNegotiation
 import io.ktor.http.ContentType
 import io.ktor.jackson.jackson
+import io.ktor.locations.*
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.response.respondText
-import io.ktor.routing.get
-import io.ktor.routing.post
-import io.ktor.routing.route
-import io.ktor.routing.routing
+import io.ktor.routing.*
 import org.kodein.di.generic.instance
+import java.time.Instant.now
 
 fun Application.module() {
     val kodein = KodeinBindings().getKodein(this.environment.config)
@@ -32,6 +31,8 @@ fun Application.module() {
         }
     }
 
+    install(Locations)
+
     authentication {
         jwt("jwt") {
             realm = jwtPropsProvider.realm
@@ -43,12 +44,14 @@ fun Application.module() {
     }
 
     routing {
-        get("hello") {
-            call.respondText("HELLO WORLD!", contentType = ContentType.Text.Plain)
+        hello()
+
+        get("helloWorld") {
+            call.respondText("Hello World!", contentType = ContentType.Text.Plain)
         }
 
-        get("helloJSON") {
-            call.respond(mapOf("hello" to "world"))
+        get<helloJson> {
+            helloJson -> call.respond(mapOf("hello" to helloJson.name))
         }
 
         post("login") {
@@ -65,3 +68,5 @@ fun Application.module() {
         }
     }
 }
+
+fun Route.hello() = get<Hello> { hello -> call.respondText("hello ${hello.name}, the time is now ${now()}.")}
