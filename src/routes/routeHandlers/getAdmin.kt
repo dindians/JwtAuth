@@ -9,5 +9,4 @@ import io.ktor.http.ContentType
 import io.ktor.response.respondText
 import io.ktor.routing.Route
 
-
 fun Route.getAdmin() = get<Admin> {_ -> call.respondText("${call.authentication.principal<User>()!!.name} Authorized.",contentType = ContentType.Text.Plain)}
