@@ -50,7 +50,7 @@ fun Application.module() {
             call.respondText("Hello World!", contentType = ContentType.Text.Plain)
         }
 
-        get<helloJson> {
+        get<HelloJson> {
             helloJson -> call.respond(mapOf("hello" to helloJson.name))
         }
 
