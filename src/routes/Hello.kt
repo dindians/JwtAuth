@@ -1,4 +1,4 @@
-package com.up
+package routes
 
 import io.ktor.locations.Location
 
