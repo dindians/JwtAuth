@@ -1,9 +1,9 @@
 package com.up
 
-import routes.Hello
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.up.routes.routeHandlers.hello
 import com.up.routes.routeHandlers.helloJson
+import com.up.routes.routeHandlers.login
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -16,12 +16,9 @@ import io.ktor.http.ContentType
 import io.ktor.jackson.jackson
 import io.ktor.locations.*
 import io.ktor.request.receive
-import io.ktor.response.respond
 import io.ktor.response.respondText
 import io.ktor.routing.*
 import org.kodein.di.generic.instance
-import routes.HelloJson
-import java.time.Instant.now
 
 fun Application.module() {
     val kodein = KodeinBindings().getKodein(this.environment.config)
@@ -50,13 +47,10 @@ fun Application.module() {
     routing {
         hello()
         helloJson()
+        login(userProvider, jwtIssuer)
 
         get("helloWorld") {
             call.respondText("Hello World!", contentType = ContentType.Text.Plain)
-        }
-
-        post("login") {
-            call.respondText(userProvider.authenticateUser(call.receive<UserPasswordCredential>())?.let(jwtIssuer::createToken)?:"")
         }
 
         authenticate("jwt") {
