@@ -1,22 +1,18 @@
 package com.up
 
 import com.fasterxml.jackson.databind.SerializationFeature
-import com.up.routes.routeHandlers.hello
-import com.up.routes.routeHandlers.helloJson
-import com.up.routes.routeHandlers.login
+import com.up.routes.routeHandlers.getAdmin
+import com.up.routes.routeHandlers.getHello
+import com.up.routes.routeHandlers.getHelloJson
+import com.up.routes.routeHandlers.postLogin
 import io.ktor.application.Application
-import io.ktor.application.call
 import io.ktor.application.install
-import io.ktor.auth.UserPasswordCredential
 import io.ktor.auth.authenticate
 import io.ktor.auth.authentication
 import io.ktor.auth.jwt.jwt
 import io.ktor.features.ContentNegotiation
-import io.ktor.http.ContentType
 import io.ktor.jackson.jackson
 import io.ktor.locations.*
-import io.ktor.request.receive
-import io.ktor.response.respondText
 import io.ktor.routing.*
 import org.kodein.di.generic.instance
 
@@ -45,21 +41,11 @@ fun Application.module() {
     }
 
     routing {
-        hello()
-        helloJson()
-        login(userProvider, jwtIssuer)
-
-        get("helloWorld") {
-            call.respondText("Hello World!", contentType = ContentType.Text.Plain)
-        }
-
+        getHello()
+        getHelloJson()
+        postLogin(userProvider, jwtIssuer)
         authenticate("jwt") {
-            route("authorized"){
-                get {
-                    val user = call.authentication.principal<User>()!!
-                    call.respondText("${user.name} Authorized",contentType = ContentType.Text.Plain)
-                }
-            }
+            getAdmin()
         }
     }
 }

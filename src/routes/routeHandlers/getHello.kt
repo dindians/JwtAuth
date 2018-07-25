@@ -7,4 +7,4 @@ import io.ktor.routing.Route
 import routes.Hello
 import java.time.Instant
 
-fun Route.hello() = get<Hello> { hello -> call.respondText("hello ${hello.name}, the time is now ${Instant.now()}. Thank you.")}
+fun Route.getHello() = get<Hello> { hello -> call.respondText("getHello ${hello.name}, the time is now ${Instant.now()}. Thank you.")}
