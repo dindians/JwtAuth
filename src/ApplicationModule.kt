@@ -8,6 +8,7 @@ import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.auth.authenticate
 import io.ktor.auth.authentication
+import io.ktor.auth.jwt.JWTAuthenticationProvider
 import io.ktor.auth.jwt.jwt
 import io.ktor.features.ContentNegotiation
 import io.ktor.http.ContentType
@@ -15,16 +16,15 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.jackson.jackson
 import io.ktor.locations.*
 import io.ktor.pipeline.PipelineContext
-import io.ktor.response.respond
 import io.ktor.response.respondText
 import io.ktor.routing.*
 import org.kodein.di.generic.instance
 
 fun Application.module() {
-    val kodein = KodeinBindings().getKodein(this.environment.config)
-    val userProvider: UserProvider by kodein.instance()
-    val jwtPropsProvider: JwtPropsProvider by kodein.instance()
-    val jwtIssuer: JwtIssuer by kodein.instance()
+    val myKodein = KodeinModules.getGlobalWithApplicationConfig(this.environment.config)
+    val userProvider: UserProvider by myKodein.instance()
+    val jwtPropsProvider: JwtPropsProvider by myKodein.instance()
+    val jwtIssuer: JwtIssuer by myKodein.instance()
 
     install(ContentNegotiation) {
         jackson {
