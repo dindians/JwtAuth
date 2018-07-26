@@ -36,11 +36,7 @@ fun Application.module() {
 
     authentication {
         jwt("jwt") {
-            realm = jwtPropsProvider.realm
-            verifier(jwtIssuer.buildVerifier())
-            validate{
-                jwtIssuer.getUserId(it)?.let(userProvider::getUser)
-            }
+            setupJWT(jwtPropsProvider, jwtIssuer, userProvider)
         }
     }
 
@@ -65,5 +61,14 @@ private suspend fun <R> PipelineContext<*, ApplicationCall>.errorAware(block: su
     } catch (e: Exception) {
         call.respondText("""{"error":"$e"}""", ContentType.parse("application/json"), HttpStatusCode.InternalServerError)
         null
+    }
+}
+
+private fun JWTAuthenticationProvider.setupJWT(jwtPropsProvider: JwtPropsProvider, jwtIssuer: JwtIssuer, userProvider: UserProvider)
+{
+    realm = jwtPropsProvider.realm
+    verifier(jwtIssuer.buildVerifier())
+    validate{
+        jwtIssuer.getUserId(it)?.let(userProvider::getUser)
     }
 }
