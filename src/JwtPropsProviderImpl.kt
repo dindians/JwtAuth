@@ -1,15 +1,19 @@
 package com.up
 
+import io.ktor.config.ApplicationConfig
+
 private const val jwtPrefix = "ktor.jwt"
 private const val jwtPayloadPrefix = "$jwtPrefix.payload"
 
-internal class JwtPropsProviderImpl(private val configurationPropertyProvider:ConfigurationPropertyProvider): JwtPropsProvider{
-    override val realm = configurationPropertyProvider.property("$jwtPrefix.realm")
-    override val validityInSeconds = configurationPropertyProvider.property("$jwtPrefix.validityInSeconds").toInt()
+internal class JwtPropsProviderImpl(private val applicationConfig: ApplicationConfig): JwtPropsProvider{
+    private fun property(path: String) = applicationConfig.property(path).getString()
+
+    override val realm = property("$jwtPrefix.realm")
+    override val validityInSeconds = property("$jwtPrefix.validityInSeconds").toInt()
 
     override fun getPayload()= JwtPayload(
-            configurationPropertyProvider.property("$jwtPayloadPrefix.issuer"),
-            configurationPropertyProvider.property("$jwtPayloadPrefix.subject"),
-            configurationPropertyProvider.property("$jwtPayloadPrefix.audience")
+            property("$jwtPayloadPrefix.issuer"),
+            property("$jwtPayloadPrefix.subject"),
+            property("$jwtPayloadPrefix.audience")
     )
 }

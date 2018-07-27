@@ -21,7 +21,7 @@ import io.ktor.routing.*
 import org.kodein.di.generic.instance
 
 fun Application.module() {
-    val myKodein = KodeinModules.getGlobalWithApplicationConfig(this.environment.config)
+    val myKodein = KodeinModules.getGlobalWithApplicationConfig(environment.config)
     val jwtIssuer: JwtIssuer by myKodein.instance()
 
     install(ContentNegotiation) {
@@ -34,8 +34,8 @@ fun Application.module() {
 
     authentication {
         jwt("jwt") {
-            val jwtPropsProvider: JwtPropsProvider by myKodein.instance()
             val userProvider: UserProvider by myKodein.instance()
+            val jwtPropsProvider: JwtPropsProvider by myKodein.instance()
             setupJWT(jwtPropsProvider, jwtIssuer, userProvider)
         }
     }
