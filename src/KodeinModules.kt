@@ -10,6 +10,7 @@ import org.kodein.di.generic.with
 object KodeinModules {
     private val globalModule = Kodein.Module(name = "global") {
         bind<UserProvider>() with provider { UserProviderImpl() }
+        bind<UserAuthenticator>() with provider { UserProviderImpl() }
     }
     val global = Kodein {
         import(globalModule)

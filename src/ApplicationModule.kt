@@ -22,8 +22,6 @@ import org.kodein.di.generic.instance
 
 fun Application.module() {
     val myKodein = KodeinModules.getGlobalWithApplicationConfig(this.environment.config)
-    val userProvider: UserProvider by myKodein.instance()
-    val jwtPropsProvider: JwtPropsProvider by myKodein.instance()
     val jwtIssuer: JwtIssuer by myKodein.instance()
 
     install(ContentNegotiation) {
@@ -36,6 +34,8 @@ fun Application.module() {
 
     authentication {
         jwt("jwt") {
+            val jwtPropsProvider: JwtPropsProvider by myKodein.instance()
+            val userProvider: UserProvider by myKodein.instance()
             setupJWT(jwtPropsProvider, jwtIssuer, userProvider)
         }
     }
@@ -48,7 +48,8 @@ fun Application.module() {
 
         getHello()
         getHelloJson()
-        postLogin(userProvider, jwtIssuer)
+        val userAuthenticator: UserAuthenticator by myKodein.instance()
+        postLogin(userAuthenticator, jwtIssuer)
         authenticate("jwt") {
             getAdmin()
         }
