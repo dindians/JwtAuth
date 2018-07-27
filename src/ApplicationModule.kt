@@ -18,12 +18,11 @@ import io.ktor.locations.*
 import io.ktor.pipeline.PipelineContext
 import io.ktor.response.respondText
 import io.ktor.routing.*
-import org.kodein.di.generic.instance
 
-fun Application.module() {
-    val myKodein = KodeinModules.getGlobalWithApplicationConfig(environment.config)
-    val jwtIssuer: JwtIssuer by myKodein.instance()
+fun Application.module() = setupApplication(ApplicationDependenciesImpl.create(environment.config))
 
+private fun Application.setupApplication(applicationDependencies:ApplicationDependencies)
+{
     install(ContentNegotiation) {
         jackson {
             enable(SerializationFeature.INDENT_OUTPUT)
@@ -34,9 +33,7 @@ fun Application.module() {
 
     authentication {
         jwt("jwt") {
-            val userProvider: UserProvider by myKodein.instance()
-            val jwtPropsProvider: JwtPropsProvider by myKodein.instance()
-            setupJWT(jwtPropsProvider, jwtIssuer, userProvider)
+            setupJWT(applicationDependencies.jwtPropsProvider, applicationDependencies.jwtIssuer, applicationDependencies.userProvider)
         }
     }
 
@@ -48,8 +45,7 @@ fun Application.module() {
 
         getHello()
         getHelloJson()
-        val userAuthenticator: UserAuthenticator by myKodein.instance()
-        postLogin(userAuthenticator, jwtIssuer)
+        postLogin(applicationDependencies.userAuthenticator, applicationDependencies.jwtIssuer)
         authenticate("jwt") {
             getAdmin()
         }
