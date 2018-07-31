@@ -6,4 +6,4 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.routing.Route
 import io.ktor.locations.get
 
-fun Route.getMyException() = get<MyException> { myException -> failWithStatusCode(HttpStatusCode.InternalServerError,{ throw Exception(myException.message?:"default-message") }) }
+fun Route.getMyException() = get<MyException> { myException -> failWithStatusCode(HttpStatusCode.InternalServerError,{ throw Exception(myException.message) }) }
