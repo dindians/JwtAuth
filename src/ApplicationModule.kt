@@ -32,10 +32,10 @@ private fun Application.setupApplication(applicationDependencies:ApplicationDepe
     }
 
     routing {
+        getHello()
         getFeature()
         getFeatureOption()
-        getHello()
-        getHelloJson()
+        getFeatureOptionDetails()
         getMyException()
         postLogin(applicationDependencies.userAuthenticator, applicationDependencies.jwtIssuer)
         authenticate("jwt") {
