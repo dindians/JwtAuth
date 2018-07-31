@@ -32,6 +32,8 @@ private fun Application.setupApplication(applicationDependencies:ApplicationDepe
     }
 
     routing {
+        getFeature()
+        getFeatureOption()
         getHello()
         getHelloJson()
         getMyException()
