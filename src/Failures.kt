@@ -19,10 +19,9 @@ internal suspend fun <R> PipelineContext<*, ApplicationCall>.tryFailWithStatusCo
     }
 }
 
-private suspend fun PipelineContext<*, ApplicationCall>.failWithStatusCode(throwable: Throwable, httpStatusCode:HttpStatusCode) = call.respondThrowable(throwable, httpStatusCode)
-
-private suspend fun ApplicationCall.respondThrowable(throwable: Throwable, httpStatusCode:HttpStatusCode)
-{
-    response.status(httpStatusCode)
-    respond(mapOf("exceptionType" to throwable::class.qualifiedName, "exceptionDetails" to throwable, "request" to "${request.httpMethod.value} ${request.uri}"))
+private suspend fun PipelineContext<*, ApplicationCall>.failWithStatusCode(throwable: Throwable, httpStatusCode:HttpStatusCode) {
+    with(call) {
+        response.status(httpStatusCode)
+        respond(mapOf("exceptionType" to throwable::class.qualifiedName, "exceptionDetails" to throwable, "request" to "${request.httpMethod.value} ${request.uri}"))
+    }
 }
