@@ -1,7 +1,6 @@
 package com.up
 
 import com.fasterxml.jackson.databind.SerializationFeature
-import com.up.routes.failWithBadRequest
 import com.up.routes.routeHandlers.*
 import io.ktor.application.Application
 import io.ktor.application.install

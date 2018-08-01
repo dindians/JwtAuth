@@ -1,4 +1,4 @@
-package com.up.routes
+package com.up
 
 import io.ktor.application.ApplicationCall
 import io.ktor.application.call

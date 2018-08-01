@@ -2,8 +2,8 @@ package com.up.routes.routeHandlers
 
 import com.up.UserAuthenticator
 import com.up.JwtIssuer
-import routes.routeData.Login
-import com.up.routes.tryFailWithStatusCode
+import com.up.routes.locationData.Login
+import com.up.tryFailWithStatusCode
 import io.ktor.application.call
 import io.ktor.auth.UserPasswordCredential
 import io.ktor.http.HttpStatusCode

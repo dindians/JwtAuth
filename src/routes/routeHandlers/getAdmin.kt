@@ -1,7 +1,7 @@
 package com.up.routes.routeHandlers
 
 import com.up.User
-import routes.routeData.Admin
+import com.up.routes.locationData.Admin
 import io.ktor.locations.get
 import io.ktor.application.call
 import io.ktor.auth.authentication

@@ -1,6 +1,6 @@
 package com.up.routes.routeHandlers
 
-import routes.routeData.Feature
+import com.up.routes.locationData.Feature
 import io.ktor.routing.Route
 
 fun Route.getFeatureOption() {
