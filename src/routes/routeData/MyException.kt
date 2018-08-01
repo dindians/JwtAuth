@@ -1,4 +1,4 @@
-package com.up.routes
+package routes.routeData
 
 import io.ktor.locations.Location
 

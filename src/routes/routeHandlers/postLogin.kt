@@ -2,7 +2,7 @@ package com.up.routes.routeHandlers
 
 import com.up.UserAuthenticator
 import com.up.JwtIssuer
-import com.up.routes.Login
+import routes.routeData.Login
 import com.up.routes.tryFailWithStatusCode
 import io.ktor.application.call
 import io.ktor.auth.UserPasswordCredential

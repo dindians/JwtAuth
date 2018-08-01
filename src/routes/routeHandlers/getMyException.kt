@@ -1,6 +1,6 @@
 package com.up.routes.routeHandlers
 
-import com.up.routes.MyException
+import routes.routeData.MyException
 import com.up.routes.tryFailWithStatusCode
 import io.ktor.http.HttpStatusCode
 import io.ktor.routing.Route
