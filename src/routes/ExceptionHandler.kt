@@ -4,13 +4,25 @@ import io.ktor.application.ApplicationCall
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.pipeline.PipelineContext
+import io.ktor.request.httpMethod
+import io.ktor.request.uri
 import io.ktor.response.respond
 
-internal suspend fun <R> PipelineContext<*, ApplicationCall>.failWithStatusCode(httpStatusCode:HttpStatusCode, block: suspend () -> R): R? {
-    return try { block()
-    } catch (e: Exception) {
-        call.response.status(httpStatusCode)
-        call.respond(mapOf("exceptionType" to e::class.qualifiedName, "exceptionDetails" to e))
+internal suspend fun PipelineContext<*, ApplicationCall>.failWithBadRequest(throwable: Throwable) = failWithStatusCode(throwable, HttpStatusCode.BadRequest)
+
+internal suspend fun PipelineContext<*, ApplicationCall>.failWithStatusCode(throwable: Throwable, httpStatusCode:HttpStatusCode) = call.respondException(throwable, httpStatusCode)
+
+internal suspend fun <R> PipelineContext<*, ApplicationCall>.tryFailWithStatusCode(block: suspend () -> R, httpStatusCode: HttpStatusCode): R? {
+    return try {
+        block()
+    } catch (throwable: Throwable) {
+        call.respondException(throwable, httpStatusCode)
         null
     }
+}
+
+private suspend fun ApplicationCall.respondException(throwable: Throwable, httpStatusCode:HttpStatusCode)
+{
+    response.status(httpStatusCode)
+    respond(mapOf("exceptionType" to throwable::class.qualifiedName, "exceptionDetails" to throwable, "request" to "${request.httpMethod.value} ${request.uri}"))
 }
