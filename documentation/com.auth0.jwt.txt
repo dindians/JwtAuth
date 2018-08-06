@@ -1,0 +1,6 @@
+package com.aut0.jwt is the Java implementation of JSON Web Token (JWT)
+
+RFC7519 JSON Web Token (JWT), https://tools.ietf.org/html/rfc7519
+source code on GitHub: https://github.com/auth0/java-jwt
+
+
