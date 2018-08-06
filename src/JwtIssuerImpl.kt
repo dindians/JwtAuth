@@ -7,19 +7,19 @@ import java.util.*
 internal class JwtIssuerImpl(jwtPropsProvider:JwtPropsProvider, jwtSigningAlgorithmProvider:JwtSigningAlgorithmProvider) : JwtIssuer{
     private val validityInMs = jwtPropsProvider.validityInSeconds
     private val algorithm = jwtSigningAlgorithmProvider.getAlgorithm()
-    private val jwtPayload: JwtPayload = jwtPropsProvider.getPayload()
+    private val jwtPayloadDetails: JwtPayloadDetails = jwtPropsProvider.getPayloadDetails()
 
     override fun buildVerifier(): JWTVerifier = JWT
             .require(algorithm)
-            .withSubject(jwtPayload.subject)
-            .withIssuer(jwtPayload.issuer)
-            .withAudience(jwtPayload.audience)
+            .withSubject(jwtPayloadDetails.subject)
+            .withIssuer(jwtPayloadDetails.issuer)
+            .withAudience(jwtPayloadDetails.audience)
             .build()
 
     override fun createToken(user:User):String = JWT.create()
-                    .withSubject(jwtPayload.subject)
-                    .withIssuer(jwtPayload.issuer)
-                    .withAudience(jwtPayload.audience)
+                    .withSubject(jwtPayloadDetails.subject)
+                    .withIssuer(jwtPayloadDetails.issuer)
+                    .withAudience(jwtPayloadDetails.audience)
                     .withClaim("id", user.id)
                     .withArrayClaim("countries", user.countries.toTypedArray())
                     .withExpiresAt(getExpiration())

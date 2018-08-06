@@ -11,7 +11,7 @@ internal class JwtPropsProviderImpl(private val applicationConfig: ApplicationCo
     override val realm = property("$jwtPrefix.realm")
     override val validityInSeconds = property("$jwtPrefix.validityInSeconds").toInt()
 
-    override fun getPayload()= JwtPayload(
+    override fun getPayloadDetails()= JwtPayloadDetails(
             property("$jwtPayloadPrefix.issuer"),
             property("$jwtPayloadPrefix.subject"),
             property("$jwtPayloadPrefix.audience")
