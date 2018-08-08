@@ -9,6 +9,7 @@ internal class JwtIssuerImpl(jwtPropsProvider:JwtPropsProvider, jwtSigningAlgori
     private val algorithm = jwtSigningAlgorithmProvider.getAlgorithm()
     private val jwtPayloadDetails: JwtPayloadDetails = jwtPropsProvider.getPayloadDetails()
 
+    // The JWTVerifier class holds the verify method to assert that a given Token has not only a proper JWT format, but also it's signature matches.
     override fun buildVerifier(): JWTVerifier = JWT
             .require(algorithm)
             .withSubject(jwtPayloadDetails.subject)
