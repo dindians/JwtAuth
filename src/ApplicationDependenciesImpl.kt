@@ -20,7 +20,6 @@ internal class ApplicationDependenciesImpl private constructor(applicationConfig
 
     override val jwtIssuer: JwtIssuer by appKodein.instance()
     override val userProvider: UserProvider by appKodein.instance()
-    override val jwtPropsProvider: JwtPropsProvider by appKodein.instance()
     override val userAuthenticator: UserAuthenticator by appKodein.instance()
 
     internal companion object {
