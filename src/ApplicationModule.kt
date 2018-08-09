@@ -14,15 +14,15 @@ import io.ktor.jackson.jackson
 import io.ktor.locations.Locations
 import io.ktor.routing.routing
 
-fun Application.module() = setupApplication(ApplicationDependenciesImpl.create(environment.config))
+fun Application.module() = setupApplication(CoreDependenciesImpl.create(environment.config))
 
-private fun Application.setupApplication(applicationDependencies:ApplicationDependencies)
+private fun Application.setupApplication(coreDependencies:CoreDependencies)
 {
     install(StatusPages){ exception<Throwable> { failWithBadRequest(it) } }
     install(ContentNegotiation) { jackson { enable(SerializationFeature.INDENT_OUTPUT) } }
     install(Locations)
 
-    authentication { jwt("jwt") { setupJWT(applicationDependencies.jwtIssuer) } }
+    authentication { jwt("jwt") { setupJWT(coreDependencies.jwtIssuer) } }
 
     routing {
         getHello()
@@ -30,7 +30,7 @@ private fun Application.setupApplication(applicationDependencies:ApplicationDepe
         getFeatureOption()
         getFeatureOptionDetails()
         getMyException()
-        postLogin(applicationDependencies.jwtIssuer)
+        postLogin(coreDependencies.jwtIssuer)
         authenticate("jwt") { getAdmin() }
     }
 }

@@ -1,5 +1,5 @@
 package com.up
 
-interface ApplicationDependencies {
+interface CoreDependencies {
     val jwtIssuer: JwtIssuer
 }

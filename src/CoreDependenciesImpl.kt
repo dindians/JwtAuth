@@ -7,7 +7,7 @@ import org.kodein.di.generic.instance
 import org.kodein.di.generic.provider
 import org.kodein.di.generic.with
 
-internal class ApplicationDependenciesImpl private constructor(applicationConfig:ApplicationConfig): ApplicationDependencies
+internal class CoreDependenciesImpl private constructor(applicationConfig:ApplicationConfig): CoreDependencies
 {
     private val appKodein = Kodein {
         bind<UserProvider>() with provider { UserProviderImpl() }
@@ -21,6 +21,6 @@ internal class ApplicationDependenciesImpl private constructor(applicationConfig
     override val jwtIssuer: JwtIssuer by appKodein.instance()
 
     internal companion object {
-        fun create(applicationConfig:ApplicationConfig):ApplicationDependenciesImpl = ApplicationDependenciesImpl(applicationConfig)
+        fun create(applicationConfig:ApplicationConfig):CoreDependenciesImpl = CoreDependenciesImpl(applicationConfig)
     }
 }
