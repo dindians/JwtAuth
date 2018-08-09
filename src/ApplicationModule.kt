@@ -22,7 +22,7 @@ private fun Application.setupApplication(applicationDependencies:ApplicationDepe
     install(ContentNegotiation) { jackson { enable(SerializationFeature.INDENT_OUTPUT) } }
     install(Locations)
 
-    authentication { jwt("jwt") { setupJWT(applicationDependencies.jwtIssuer, applicationDependencies.userProvider) } }
+    authentication { jwt("jwt") { setupJWT(applicationDependencies.jwtIssuer) } }
 
     routing {
         getHello()
@@ -30,14 +30,14 @@ private fun Application.setupApplication(applicationDependencies:ApplicationDepe
         getFeatureOption()
         getFeatureOptionDetails()
         getMyException()
-        postLogin(applicationDependencies.userAuthenticator, applicationDependencies.jwtIssuer)
+        postLogin(applicationDependencies.jwtIssuer)
         authenticate("jwt") { getAdmin() }
     }
 }
 
-private fun JWTAuthenticationProvider.setupJWT(jwtIssuer: JwtIssuer, userProvider: UserProvider)
+private fun JWTAuthenticationProvider.setupJWT(jwtIssuer: JwtIssuer)
 {
     realm = jwtIssuer.realm
     verifier(jwtIssuer.buildVerifier())
-    validate{ jwtIssuer.getUserId(it)?.let(userProvider::getUser) }
+    validate{ jwtIssuer.validate(it) }
 }

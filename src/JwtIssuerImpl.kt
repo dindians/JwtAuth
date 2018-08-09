@@ -2,10 +2,12 @@ package com.up
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
+import io.ktor.auth.Principal
+import io.ktor.auth.UserPasswordCredential
 import io.ktor.auth.jwt.JWTCredential
 import java.util.*
 
-internal class JwtIssuerImpl(jwtPropsProvider:JwtPropsProvider, jwtSigningAlgorithmProvider:JwtSigningAlgorithmProvider) : JwtIssuer{
+internal class JwtIssuerImpl(jwtPropsProvider:JwtPropsProvider, jwtSigningAlgorithmProvider:JwtSigningAlgorithmProvider, private val userAuthenticator:UserAuthenticator, private val userProvider:UserProvider) : JwtIssuer{
     private val validityInMs = jwtPropsProvider.validityInSeconds
     private val algorithm = jwtSigningAlgorithmProvider.getAlgorithm()
     private val jwtPayloadDetails: JwtPayloadDetails = jwtPropsProvider.getPayloadDetails()
@@ -20,7 +22,11 @@ internal class JwtIssuerImpl(jwtPropsProvider:JwtPropsProvider, jwtSigningAlgori
             .withAudience(jwtPayloadDetails.audience)
             .build()
 
-    override fun createToken(user:User):String = JWT.create()
+    override fun validateCredentialsAndCreateToken(userPasswordCredential: UserPasswordCredential) = userPasswordCredential.let(userAuthenticator::authenticateUser)?.let(this::createToken)?: ""
+
+    override fun validate(jwtCredentials: JWTCredential): Principal? = getUserId(jwtCredentials)?.let(userProvider::getUser)
+
+    private fun createToken(user:User):String = JWT.create()
                     .withSubject(jwtPayloadDetails.subject)
                     .withIssuer(jwtPayloadDetails.issuer)
                     .withAudience(jwtPayloadDetails.audience)
@@ -29,7 +35,7 @@ internal class JwtIssuerImpl(jwtPropsProvider:JwtPropsProvider, jwtSigningAlgori
                     .withExpiresAt(getExpiration())
                     .sign(algorithm)
 
-    override fun getUserId(jwtCredentials: JWTCredential) = jwtCredentials.payload.getClaim("id")?.asInt()
+    private fun getUserId(jwtCredentials: JWTCredential) = jwtCredentials.payload.getClaim("id")?.asInt()
 
     private fun getExpiration() = Date(System.currentTimeMillis() + validityInMs)
 }

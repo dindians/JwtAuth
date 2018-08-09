@@ -1,8 +1,8 @@
 package com.up
 
-import io.ktor.auth.*
+import io.ktor.auth.Principal
 
-data class User(
+internal data class User(
         val id: Int,
         val name: String,
         val countries: List<String>

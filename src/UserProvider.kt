@@ -1,5 +1,5 @@
 package com.up
 
-interface UserProvider {
+internal interface UserProvider {
     fun getUser(id:Int):User?
 }

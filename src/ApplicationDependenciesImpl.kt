@@ -15,12 +15,10 @@ internal class ApplicationDependenciesImpl private constructor(applicationConfig
         constant(tag = "jwtSigningAlgorithmSecret") with "zAP5MBA4B4Ijz0MZaS48"
         bind<JwtPropsProvider>() with provider { JwtPropsProviderImpl(applicationConfig) }
         bind<JwtSigningAlgorithmProvider>() with provider { JwtSigningAlgorithmProviderImpl(this.instance(tag = "jwtSigningAlgorithmSecret")) }
-        bind<JwtIssuer>() with provider { JwtIssuerImpl(this.instance<JwtPropsProvider>(), this.instance<JwtSigningAlgorithmProvider>()) }
+        bind<JwtIssuer>() with provider { JwtIssuerImpl(this.instance<JwtPropsProvider>(), this.instance<JwtSigningAlgorithmProvider>(), this.instance<UserAuthenticator>(), this.instance<UserProvider>()) }
     }
 
     override val jwtIssuer: JwtIssuer by appKodein.instance()
-    override val userProvider: UserProvider by appKodein.instance()
-    override val userAuthenticator: UserAuthenticator by appKodein.instance()
 
     internal companion object {
         fun create(applicationConfig:ApplicationConfig):ApplicationDependenciesImpl = ApplicationDependenciesImpl(applicationConfig)
