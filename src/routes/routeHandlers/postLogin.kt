@@ -9,6 +9,6 @@ import io.ktor.request.receiveOrNull
 import io.ktor.response.respond
 import io.ktor.routing.Route
 
-fun Route.postLogin(jwtTokenCreator: JwtTokenCreator) = post<Login> {
+internal fun Route.postLogin(jwtTokenCreator: JwtTokenCreator) = post<Login> {
     call.respond(mapOf("bearerToken" to (call.receiveOrNull<UserPasswordCredential>()?.let(jwtTokenCreator::validateCredentialsAndCreateToken) ?: "")))
 }
